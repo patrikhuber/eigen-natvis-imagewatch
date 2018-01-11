@@ -23,7 +23,7 @@
       <Item Name="[rows]">$T2</Item>
       <Item Name="[cols]">$T3</Item>
 
-      <Item Name="[width]" Condition="(Flags%2)">$T3</Item>
+      <Item Name="[width]" Condition="(Flags%2)">$T3</Item> <!-- Todo: These should be unconditional. width is always equal to cols and height is always equal to rows. Storage order (ColMajor or RowMajor) has nothing to do with it. -->
       <Item Name="[width]" Condition="!(Flags%2)">$T2</Item>
 
       <Item Name="[height]" Condition="(Flags%2)">$T2</Item>
@@ -31,8 +31,13 @@
 
       <Item Name="[data]">($T1*)(m_storage.m_data.array)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)">$T3*sizeof($T1)</Item> <!-- row major layout -->
-      <Item Name="[stride]" Condition="!(Flags%2)">$T2*sizeof($T1)</Item> <!-- col major layout -->
+      <!-- Note: We can specify a semicolon-separated list of the strides here (supposedly row- and col-strides). But I haven't gotten it to work yet. -->
+      <Synthetic Name="[stride]" Condition="(Flags%2)"> <!-- row major layout -->
+        <DisplayString>{$T3*sizeof($T1)}</DisplayString> <!-- Should be something like: {$T3*sizeof($T1)}; {sizeof($T1)} -->
+      </Synthetic>
+      <Synthetic Name="[stride]" Condition="!(Flags%2)"> <!-- col major layout -->
+        <DisplayString>{$T2*sizeof($T1)}</DisplayString>
+      </Synthetic>
     </Expand>
   </Type>
 
