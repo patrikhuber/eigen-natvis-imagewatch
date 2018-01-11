@@ -31,7 +31,7 @@
 
       <Item Name="[data]">($T1*)(m_storage.m_data.array)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)" >$T3*sizeof($T1)</Item> <!-- row major layout -->
+      <Item Name="[stride]" Condition="(Flags%2)">$T3*sizeof($T1)</Item> <!-- row major layout -->
       <Item Name="[stride]" Condition="!(Flags%2)">$T2*sizeof($T1)</Item> <!-- col major layout -->
     </Expand>
   </Type>
@@ -64,7 +64,7 @@
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)" >m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
+      <Item Name="[stride]" Condition="(Flags%2)">m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
       <Item Name="[stride]" Condition="!(Flags%2)">m_storage.m_rows*sizeof($T1)</Item> <!-- col major layout -->
     </Expand>
   </Type>
@@ -97,7 +97,7 @@
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)" >1*sizeof($T1)</Item> <!-- row major layout -->
+      <Item Name="[stride]" Condition="(Flags%2)">1*sizeof($T1)</Item> <!-- row major layout -->
       <Item Name="[stride]" Condition="!(Flags%2)">m_storage.m_rows*sizeof($T1)</Item> <!-- col major layout -->
     </Expand>
   </Type>
@@ -130,7 +130,7 @@
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)" >m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
+      <Item Name="[stride]" Condition="(Flags%2)">m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
       <Item Name="[stride]" Condition="!(Flags%2)">1*sizeof($T1)</Item> <!-- col major layout -->
     </Expand>
   </Type>
