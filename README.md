@@ -8,6 +8,6 @@ The .natvis file is initially taken from https://gist.github.com/willyd/3ffd39a1
 
 RowMajor matrices are displayed correctly. However, ColMajor matrices are displayed transposed. It would be nice to fix that. Image Watch supports row and col strides but I couldn't get it to work.
 
-Support making Image Watch open-source: https://visualstudio.uservoice.com/forums/121579-visual-studio-ide/suggestions/32925451-open-source-image-watch-plugin
+Support making Image Watch open-source: https://developercommunity.visualstudio.com/t/open-source-image-watch-plugin/351613
 
 Post & details about the strides issue on MS Developer Community: https://developercommunity.visualstudio.com/content/problem/181317/image-watch-and-eigen-support-custom-rowcol-stride.html
