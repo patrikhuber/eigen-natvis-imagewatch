@@ -23,21 +23,16 @@
       <Item Name="[rows]">$T2</Item>
       <Item Name="[cols]">$T3</Item>
 
-      <Item Name="[width]" Condition="(Flags%2)">$T3</Item> <!-- Todo: These should be unconditional. width is always equal to cols and height is always equal to rows. Storage order (ColMajor or RowMajor) has nothing to do with it. -->
-      <Item Name="[width]" Condition="!(Flags%2)">$T2</Item>
-
-      <Item Name="[height]" Condition="(Flags%2)">$T2</Item>
-      <Item Name="[height]" Condition="!(Flags%2)">$T3</Item>
+      <Item Name="[width]">$T3</Item>
+      <Item Name="[height]">$T2</Item>
 
       <Item Name="[data]">($T1*)(m_storage.m_data.array)</Item>
 
-      <!-- Note: We can specify a semicolon-separated list of the strides here (supposedly row- and col-strides). But I haven't gotten it to work yet. -->
-      <Synthetic Name="[stride]" Condition="(Flags%2)"> <!-- row major layout -->
-        <DisplayString>{$T3*sizeof($T1)}</DisplayString> <!-- Should be something like: {$T3*sizeof($T1)}; {sizeof($T1)} -->
-      </Synthetic>
-      <Synthetic Name="[stride]" Condition="!(Flags%2)"> <!-- col major layout -->
-        <DisplayString>{$T2*sizeof($T1)}</DisplayString>
-      </Synthetic>
+      <!-- Row stride: RowMajor ($T4 & 1) = cols * sizeof(T), ColMajor = sizeof(T) -->
+      <Item Name="[stride]">($T4 &amp; 1) ? ($T3 * sizeof($T1)) : sizeof($T1)</Item>
+
+      <!-- Column stride: RowMajor = sizeof(T) (contiguous, ignored by IW), ColMajor = rows * sizeof(T) -->
+      <Item Name="[col_stride]">($T4 &amp; 1) ? sizeof($T1) : ($T2 * sizeof($T1))</Item>
     </Expand>
   </Type>
 
@@ -61,16 +56,17 @@
       <Item Name="[rows]">m_storage.m_rows</Item>
       <Item Name="[cols]">m_storage.m_cols</Item>
 
-      <Item Name="[width]" Condition="(Flags%2)">m_storage.m_cols</Item>
-      <Item Name="[width]" Condition="!(Flags%2)">m_storage.m_rows</Item>
-
-      <Item Name="[height]" Condition="(Flags%2)">m_storage.m_rows</Item>
-      <Item Name="[height]" Condition="!(Flags%2)">m_storage.m_cols</Item>
+      <Item Name="[width]">m_storage.m_cols</Item>
+      <Item Name="[height]">m_storage.m_rows</Item>
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)">m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
-      <Item Name="[stride]" Condition="!(Flags%2)">m_storage.m_rows*sizeof($T1)</Item> <!-- col major layout -->
+      <!-- Row stride: RowMajor = cols * sizeof(T), ColMajor = sizeof(T) -->
+      <!-- $T2 is Options (2nd wildcard in <*,-1,-1,*,*,*>) -->
+      <Item Name="[stride]">($T2 &amp; 1) ? (m_storage.m_cols * sizeof($T1)) : sizeof($T1)</Item>
+
+      <!-- Column stride: RowMajor = sizeof(T) (contiguous, ignored by IW), ColMajor = rows * sizeof(T) -->
+      <Item Name="[col_stride]">($T2 &amp; 1) ? sizeof($T1) : (m_storage.m_rows * sizeof($T1))</Item>
     </Expand>
   </Type>
 
@@ -94,16 +90,13 @@
       <Item Name="[rows]">m_storage.m_rows</Item>
       <Item Name="[cols]">1</Item>
 
-      <Item Name="[width]" Condition="(Flags%2)">1</Item>
-      <Item Name="[width]" Condition="!(Flags%2)">m_storage.m_rows</Item>
-
-      <Item Name="[height]" Condition="(Flags%2)">m_storage.m_rows</Item>
-      <Item Name="[height]" Condition="!(Flags%2)">1</Item>
+      <Item Name="[width]">1</Item>
+      <Item Name="[height]">m_storage.m_rows</Item>
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)">1*sizeof($T1)</Item> <!-- row major layout -->
-      <Item Name="[stride]" Condition="!(Flags%2)">m_storage.m_rows*sizeof($T1)</Item> <!-- col major layout -->
+      <!-- Column vector: 1 col, so row stride = sizeof(T) regardless of layout -->
+      <Item Name="[stride]">sizeof($T1)</Item>
     </Expand>
   </Type>
 
@@ -127,16 +120,13 @@
       <Item Name="[rows]">1</Item>
       <Item Name="[cols]">m_storage.m_cols</Item>
 
-      <Item Name="[width]" Condition="(Flags%2)">m_storage.m_cols</Item>
-      <Item Name="[width]" Condition="!(Flags%2)">1</Item>
-
-      <Item Name="[height]" Condition="(Flags%2)">1</Item>
-      <Item Name="[height]" Condition="!(Flags%2)">m_storage.m_cols</Item>
+      <Item Name="[width]">m_storage.m_cols</Item>
+      <Item Name="[height]">1</Item>
 
       <Item Name="[data]">(m_storage.m_data)</Item>
 
-      <Item Name="[stride]" Condition="(Flags%2)">m_storage.m_cols*sizeof($T1)</Item> <!-- row major layout -->
-      <Item Name="[stride]" Condition="!(Flags%2)">1*sizeof($T1)</Item> <!-- col major layout -->
+      <!-- Row vector: 1 row, so stride = cols * sizeof(T) regardless of layout -->
+      <Item Name="[stride]">m_storage.m_cols*sizeof($T1)</Item>
     </Expand>
   </Type>
 </AutoVisualizer>
